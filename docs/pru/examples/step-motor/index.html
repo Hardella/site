@@ -13,19 +13,19 @@
 
 
 
-<title>Step motor control  Hardella IDE</title>
+<title>Управление шаговым двигателем  Hardella IDE</title>
 
 
 
 
-<meta name="description" content="Step motor programming in Hardella IDE via STEP/DIR interface. Hardella is a capable IDE for PLC programming in 61131 languages (ST, etc)">
+<meta name="description" content="Инструкция по управлению шаговым двигателем в Hardella IDE. Hardella это среда для программирования ПЛК на языках группы 61131 (ST и т.п.)">
 
 
 
 
 <meta property="og:locale" content="ru">
 <meta property="og:site_name" content="Hardella IDE">
-<meta property="og:title" content="Step motor control">
+<meta property="og:title" content="Управление шаговым двигателем">
 
 
   <link rel="canonical" href="https://hardella.com/docs/pru/examples/step-motor/">
@@ -33,7 +33,7 @@
 
 
 
-  <meta property="og:description" content="Step motor programming in Hardella IDE via STEP/DIR interface. Hardella is a capable IDE for PLC programming in 61131 languages (ST, etc)">
+  <meta property="og:description" content="Инструкция по управлению шаговым двигателем в Hardella IDE. Hardella это среда для программирования ПЛК на языках группы 61131 (ST и т.п.)">
 
 
 
@@ -349,41 +349,41 @@
 
 
   <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
-    <meta itemprop="headline" content="Step motor control">
-    <meta itemprop="description" content="Step motor programming in Hardella IDE via STEP/DIR interface. Hardella is a capable IDE for PLC programming in 61131 languages (ST, etc)">
+    <meta itemprop="headline" content="Управление шаговым двигателем">
+    <meta itemprop="description" content="Инструкция по управлению шаговым двигателем в Hardella IDE. Hardella это среда для программирования ПЛК на языках группы 61131 (ST и т.п.)">
     
-    <meta itemprop="dateModified" content="December 25, 2016">
+    <meta itemprop="dateModified" content="January 01, 2017">
 
     <div class="page__inner-wrap">
       
         <header>
-          <h1 class="page__title" itemprop="headline">Step motor control
+          <h1 class="page__title" itemprop="headline">Управление шаговым двигателем
 </h1>
           
         </header>
       
 
       <section class="page__content" itemprop="text">
-        <p>Let’s create a program to control step motor.
-<code class="highlighter-rouge">STEP</code> input will be connected to <code class="highlighter-rouge">fast output 3</code>, and <code class="highlighter-rouge">DIR</code> will be connected to <code class="highlighter-rouge">fast output 4</code>.</p>
+        <p>Напишем программу для управления шаговым двигателем.
+<code class="highlighter-rouge">STEP</code> вход будем подключать к <code class="highlighter-rouge">fast output 3</code>, а <code class="highlighter-rouge">DIR</code> к <code class="highlighter-rouge">fast output 4</code>.</p>
 
-<p>The main CoDeSys program will specify the number of pulses and pulse frequency.</p>
+<p>Из основной программы CoDeSys будем задавать количество импульсов, частоту их следования.</p>
 
-<p>If you have Hardella IDE opened, you can either open
-<a href="http://localhost:8080/select/example/r:8ec7a8ed-4f5a-443d-98ba-db336a7e181c/6983793011668973636" target="_blank"><img src="/assets/images/hardella.iconset/icon_64x64.png" style="width:1em;" />code sample in the IDE</a>, or you can create a new project with this code (<code class="highlighter-rouge">File</code> &gt; <code class="highlighter-rouge">New</code> &gt; <code class="highlighter-rouge">Project</code> &gt; <code class="highlighter-rouge">Step motors</code>).</p>
+<p>Если у вас открыта среда Hardella IDE, то можете либо
+<a href="http://localhost:8080/select/example/r:8ec7a8ed-4f5a-443d-98ba-db336a7e181c/6983793011668973636" target="_blank"><img src="/assets/images/hardella.iconset/icon_64x64.png" style="width:1em;" />открыть код примера в среде</a>, либо создать свой проект на основе примера (<code class="highlighter-rouge">File</code> &gt; <code class="highlighter-rouge">New</code> &gt; <code class="highlighter-rouge">Project</code> &gt; <code class="highlighter-rouge">Step motors</code>).</p>
 
-<p><img width="934" alt="PRU program that controls step motor" src="https://hardella.com/assets/images/docs/pru/examples/step-motor/program.png" /></p>
+<p><img width="934" alt="PRU программа управления ШД" src="https://hardella.com/assets/images/docs/pru/examples/step-motor/program.png" /></p>
 
-<p>Let’s set PRU cycle length to be 1 µs.</p>
+<p>Укажем длительность цикла PRU 1 мкс.</p>
 
-<p><img width="584" alt="PRU configuration" src="https://hardella.com/assets/images/docs/pru/examples/step-motor/pru-configuration.png" /></p>
+<p><img width="584" alt="Настройка PRU" src="https://hardella.com/assets/images/docs/pru/examples/step-motor/pru-configuration.png" /></p>
 
-<p>We need to <a href="/docs/pru/project-build/">build the project</a> and <a href="/docs/pru/codesys-setup/">load it to CoDeSys</a>. Let’s check what we have got so far.</p>
+<p><a href="/docs/pru/project-build/">Скомпилируем программу</a>, <a href="/docs/pru/codesys-setup/">загрузим в CoDeSys</a>, и посмотрим что получилось.</p>
 
-<p>Here’s how we would control the step motor from the CoDeSys program:</p>
+<p>Опишем запуск ШД на стороне КДС:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>StepperConfig_Pru0Init(); (* PRU0 initialization *)
-(* PRU is up and running, now we can exchange the data *)
+<div class="highlighter-rouge"><pre class="highlight"><code>StepperConfig_Pru0Init(); (* загрузка кода в PRU0 *)
+(* PRU запущены, можно обмениваться данными *)
 StepperConfig_Pru0MemoryTransfer(
   STEPPER_PRU0_dir := TRUE,
   STEPPER_PRU0_stepper_accel_ramp := 100,
@@ -398,20 +398,20 @@ StepperConfig_Pru0MemoryTransfer(
 </div>
 
 <ul>
-  <li><code class="highlighter-rouge">quantity</code>,  – number of pulses to generate</li>
-  <li><code class="highlighter-rouge">min_speed</code>, Hz – initial pulse frequency</li>
-  <li><code class="highlighter-rouge">max_speed</code>, Hz – maximum pulse frequency</li>
-  <li><code class="highlighter-rouge">accel_ramp</code>, <code class="highlighter-rouge">decel_ramp</code> Hz/s – acceleration and deceleration</li>
-  <li><code class="highlighter-rouge">enable</code> – start flag</li>
+  <li><code class="highlighter-rouge">quantity</code>, шт – количество генерируемых импульсов</li>
+  <li><code class="highlighter-rouge">min_speed</code>, Гц – начальная частота импульсов ШД</li>
+  <li><code class="highlighter-rouge">max_speed</code>, Гц – максимальная частота импульсов ШД</li>
+  <li><code class="highlighter-rouge">accel_ramp</code>, <code class="highlighter-rouge">decel_ramp</code> Гц/сек – ускорение при разгоне/торможении.</li>
+  <li><code class="highlighter-rouge">enable</code> – команда на запуск</li>
 </ul>
 
-<p>As all the pulses are generated, the step motor stops (no more pulses is generated). Note that <code class="highlighter-rouge">enable</code> is still <code class="highlighter-rouge">TRUE</code>. That’s the question: how do you know that all the pulses are generated and how do you know you can restart the stepper?</p>
+<p>Стоит учесть, что после отработки нужного количества импульсов ШД останавливается (импульсы прекращаются). А <code class="highlighter-rouge">enable</code> по-прежнему <code class="highlighter-rouge">TRUE</code>. Возникает вопрос: как узнать, что импульсы сгенерированы, и можно запускать заново?</p>
 
-<p><code class="highlighter-rouge">state</code> parameter answers that question. That parameter takes the following values <code class="highlighter-rouge">INIT</code> (the step motor is stopped, parameters are being configured), <code class="highlighter-rouge">ACCEL</code> (acceleration), <code class="highlighter-rouge">RUN</code> (running at maximum speed), <code class="highlighter-rouge">DECEL</code> (deceleration), <code class="highlighter-rouge">STOP</code> (movement is complete).</p>
+<p>Ответ на этот вопрос даёт выходной параметр <code class="highlighter-rouge">state</code>. В процессе работы, этот параметр принимает значения <code class="highlighter-rouge">INIT</code> (стоим, настройка параметров), <code class="highlighter-rouge">ACCEL</code> (разгон), <code class="highlighter-rouge">RUN</code> (движение на максимальной скорости), <code class="highlighter-rouge">DECEL</code> (замедление), <code class="highlighter-rouge">STOP</code> (движение завершено).</p>
 
-<p>The next move will happen only after <code class="highlighter-rouge">enable</code> is reset. That is you need to set <code class="highlighter-rouge">enable=FALSE</code>, then the subsequent <code class="highlighter-rouge">enable=TRUE</code> would start the next movement.</p>
+<p>Следующее движение начнётся только после сброса <code class="highlighter-rouge">enable</code>. Т.е. чтобы запустить ШД второй раз, нужно передёрнуть <code class="highlighter-rouge">enable</code>.</p>
 
-<p>That is why <code class="highlighter-rouge">enable := state &lt;&gt; STOP</code> command would result in “evergreen step motor movement”, and low frequencies (like 30 Hz) enable to see the pulses via naked eye.</p>
+<p>Поэтому команда <code class="highlighter-rouge">enable := state &lt;&gt; STOP</code> по факту и организует «вечный запуск ШД», а небольшие частоты (30 Гц) позволяют глазами увидеть, что «импульсы идут».</p>
 
         
       </section>
@@ -422,7 +422,7 @@ StepperConfig_Pru0MemoryTransfer(
 
 
                 
-          <p class="page__date"><strong><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Обновлено:</strong> <time datetime="2016-12-25">December 25, 2016 20:49</time></p>
+          <p class="page__date"><strong><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Обновлено:</strong> <time datetime="2017-01-01">January 01, 2017 15:20</time></p>
         
 
       </footer>
@@ -477,7 +477,7 @@ StepperConfig_Pru0MemoryTransfer(
   </ul>
 </div>
 
-<div class="page__footer-copyright">&copy; 2016 Hardella IDE. Powered by <a href="http://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+<div class="page__footer-copyright">&copy; 2017 Hardella IDE. Powered by <a href="http://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
       </footer>
     </div>
 
