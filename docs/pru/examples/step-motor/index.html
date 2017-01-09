@@ -352,7 +352,7 @@
     <meta itemprop="headline" content="Управление шаговым двигателем">
     <meta itemprop="description" content="Инструкция по управлению шаговым двигателем в Hardella IDE. Hardella это среда для программирования ПЛК на языках группы 61131 (ST и т.п.)">
     
-    <meta itemprop="dateModified" content="January 01, 2017">
+    <meta itemprop="dateModified" content="January 09, 2017">
 
     <div class="page__inner-wrap">
       
@@ -374,17 +374,27 @@
 
 <p><img width="934" alt="PRU программа управления ШД" src="https://hardella.com/assets/images/docs/pru/examples/step-motor/program.png" /></p>
 
+<p>Код довольно простой, так как тут лишь вызов встроенного блока управления ШД и запись выходов.</p>
+
+<p><code class="highlighter-rouge">@Export</code> перед объявлением переменной <code class="highlighter-rouge">dir</code> означает, что эта переменная будет напрямую передаваться из CoDeSys в PRU (с точки зрения PRU это <code class="highlighter-rouge">input</code> переменная)</p>
+
+<p>А <code class="highlighter-rouge">@Export</code> перед объявлением ФБ <code class="highlighter-rouge">PRU_STEPPER</code> означает, что часть переменных этого ФБ будут обмениваться с основным циклом ПЛК.</p>
+
+<p>Далее происходит запись значений в быстрые выходы.</p>
+
+<p>Аналогично можно составить программу для PRU1 и управлять вторым шаговым двигателем на выходах fast output 1 и fast output 2.</p>
+
 <p>Укажем длительность цикла PRU 1 мкс.</p>
 
 <p><img width="584" alt="Настройка PRU" src="https://hardella.com/assets/images/docs/pru/examples/step-motor/pru-configuration.png" /></p>
 
 <p><a href="/docs/pru/project-build/">Скомпилируем программу</a>, <a href="/docs/pru/codesys-setup/">загрузим в CoDeSys</a>, и посмотрим что получилось.</p>
 
-<p>Опишем запуск ШД на стороне КДС:</p>
+<p>Опишем запуск ШД на стороне КДС (перед использованием Pru0 программ нужно <a href="/docs/pru/codesys-setup/">залить PRU0.prg в ПЛК</a>, PRU1.prg – не обязательно):</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>StepperConfig_Pru0Init(); (* загрузка кода в PRU0 *)
+<div class="highlighter-rouge"><pre class="highlight"><code>SteppersConfig_Pru0Init(); (* загрузка кода в PRU0 *)
 (* PRU запущены, можно обмениваться данными *)
-StepperConfig_Pru0MemoryTransfer(
+SteppersConfig_Pru0MemoryTransfer(
   STEPPER_PRU0_dir := TRUE,
   STEPPER_PRU0_stepper_accel_ramp := 100,
   STEPPER_PRU0_stepper_decel_ramp := 100,
@@ -392,7 +402,7 @@ StepperConfig_Pru0MemoryTransfer(
   STEPPER_PRU0_stepper_min_speed := 0,
   STEPPER_PRU0_stepper_quantity := 100,
   STEPPER_PRU0_stepper_enable :=
-    StepperConfig_Pru0MemoryTransfer.STEPPER_PRU0_stepper_state &lt;&gt; STOP_STEPPER_RUN_STATE
+    SteppersConfig_Pru0MemoryTransfer.STEPPER_PRU0_stepper_state &lt;&gt; STOP_STEPPER_RUN_STATE
 );
 </code></pre>
 </div>
@@ -413,6 +423,23 @@ StepperConfig_Pru0MemoryTransfer(
 
 <p>Поэтому команда <code class="highlighter-rouge">enable := state &lt;&gt; STOP</code> по факту и организует «вечный запуск ШД», а небольшие частоты (30 Гц) позволяют глазами увидеть, что «импульсы идут».</p>
 
+<p>При необходимости, аналогично запускается и второй ШД (при использовании PRU1 нужно заливать оба файла и PRU0.prg и PRU1.prg в ПЛК):</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>SteppersConfig_Pru1Init(); (* загрузка кода в PRU1 *)
+(* PRU запущены, можно обмениваться данными *)
+SteppersConfig_Pru1MemoryTransfer(
+  STEPPER_PRU1_dir := TRUE,
+  STEPPER_PRU1_stepper_accel_ramp := 100,
+  STEPPER_PRU1_stepper_decel_ramp := 100,
+  STEPPER_PRU1_stepper_max_speed := 30,
+  STEPPER_PRU1_stepper_min_speed := 0,
+  STEPPER_PRU1_stepper_quantity := 100,
+  STEPPER_PRU1_stepper_enable :=
+    SteppersConfig_Pru0MemoryTransfer.STEPPER_PRU1_stepper_state &lt;&gt; STOP_STEPPER_RUN_STATE
+);
+</code></pre>
+</div>
+
         
       </section>
 
@@ -422,7 +449,7 @@ StepperConfig_Pru0MemoryTransfer(
 
 
                 
-          <p class="page__date"><strong><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Обновлено:</strong> <time datetime="2017-01-01">January 01, 2017 15:20</time></p>
+          <p class="page__date"><strong><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Обновлено:</strong> <time datetime="2017-01-09">January 09, 2017 22:30</time></p>
         
 
       </footer>

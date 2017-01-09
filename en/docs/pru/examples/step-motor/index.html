@@ -344,7 +344,7 @@
     <meta itemprop="headline" content="Step motor control">
     <meta itemprop="description" content="Step motor programming in Hardella IDE via STEP/DIR interface. Hardella is a capable IDE for PLC programming in 61131 languages (ST, etc)">
     
-    <meta itemprop="dateModified" content="December 25, 2016">
+    <meta itemprop="dateModified" content="January 09, 2017">
 
     <div class="page__inner-wrap">
       
@@ -374,9 +374,9 @@
 
 <p>Here’s how we would control the step motor from the CoDeSys program:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>StepperConfig_Pru0Init(); (* PRU0 initialization *)
+<div class="highlighter-rouge"><pre class="highlight"><code>SteppersConfig_Pru0Init(); (* PRU0 initialization *)
 (* PRU is up and running, now we can exchange the data *)
-StepperConfig_Pru0MemoryTransfer(
+SteppersConfig_Pru0MemoryTransfer(
   STEPPER_PRU0_dir := TRUE,
   STEPPER_PRU0_stepper_accel_ramp := 100,
   STEPPER_PRU0_stepper_decel_ramp := 100,
@@ -384,7 +384,7 @@ StepperConfig_Pru0MemoryTransfer(
   STEPPER_PRU0_stepper_min_speed := 0,
   STEPPER_PRU0_stepper_quantity := 100,
   STEPPER_PRU0_stepper_enable :=
-    StepperConfig_Pru0MemoryTransfer.STEPPER_PRU0_stepper_state &lt;&gt; STOP_STEPPER_RUN_STATE
+    SteppersConfig_Pru0MemoryTransfer.STEPPER_PRU0_stepper_state &lt;&gt; STOP_STEPPER_RUN_STATE
 );
 </code></pre>
 </div>
@@ -414,7 +414,7 @@ StepperConfig_Pru0MemoryTransfer(
 
 
                 
-          <p class="page__date"><strong><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Updated:</strong> <time datetime="2016-12-25">December 25, 2016 20:49</time></p>
+          <p class="page__date"><strong><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Updated:</strong> <time datetime="2017-01-09">January 09, 2017 22:30</time></p>
         
 
       </footer>
@@ -469,7 +469,7 @@ StepperConfig_Pru0MemoryTransfer(
   </ul>
 </div>
 
-<div class="page__footer-copyright">&copy; 2016 Hardella IDE. Powered by <a href="http://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+<div class="page__footer-copyright">&copy; 2017 Hardella IDE. Powered by <a href="http://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
       </footer>
     </div>
 
