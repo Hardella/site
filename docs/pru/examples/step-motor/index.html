@@ -352,7 +352,7 @@
     <meta itemprop="headline" content="Управление шаговым двигателем">
     <meta itemprop="description" content="Инструкция по управлению шаговым двигателем в Hardella IDE. Hardella это среда для программирования ПЛК на языках группы 61131 (ST и т.п.)">
     
-    <meta itemprop="dateModified" content="January 09, 2017">
+    <meta itemprop="dateModified" content="January 24, 2017">
 
     <div class="page__inner-wrap">
       
@@ -394,15 +394,21 @@
 
 <div class="highlighter-rouge"><pre class="highlight"><code>SteppersConfig_Pru0Init(); (* загрузка кода в PRU0 *)
 (* PRU запущены, можно обмениваться данными *)
-SteppersConfig_Pru0MemoryTransfer(
+
+SteppersConfig_Pru0MemoryRead(); (* читаем данные из PRU0 *)
+
+(* Выполняем логику программы *)
+SteppersConfig_Pru0MemoryWrite.STEPPER_PRU0_stepper_enable :=
+  SteppersConfig_Pru0MemoryRead.STEPPER_PRU0_stepper_state &lt;&gt; STOP_STEPPER_RUN_STATE;
+
+(* Записываем данные в PRU0 *)
+SteppersConfig_Pru0MemoryWrite(
   STEPPER_PRU0_dir := TRUE,
   STEPPER_PRU0_stepper_accel_ramp := 100,
   STEPPER_PRU0_stepper_decel_ramp := 100,
   STEPPER_PRU0_stepper_max_speed := 30,
   STEPPER_PRU0_stepper_min_speed := 0,
-  STEPPER_PRU0_stepper_quantity := 100,
-  STEPPER_PRU0_stepper_enable :=
-    SteppersConfig_Pru0MemoryTransfer.STEPPER_PRU0_stepper_state &lt;&gt; STOP_STEPPER_RUN_STATE
+  STEPPER_PRU0_stepper_quantity := 100
 );
 </code></pre>
 </div>
@@ -427,15 +433,21 @@ SteppersConfig_Pru0MemoryTransfer(
 
 <div class="highlighter-rouge"><pre class="highlight"><code>SteppersConfig_Pru1Init(); (* загрузка кода в PRU1 *)
 (* PRU запущены, можно обмениваться данными *)
-SteppersConfig_Pru1MemoryTransfer(
+
+SteppersConfig_Pru1MemoryRead(); (* читаем данные из PRU1 *)
+
+(* Выполняем логику программы *)
+SteppersConfig_Pru1MemoryWrite.STEPPER_PRU1_stepper_enable :=
+  SteppersConfig_Pru1MemoryRead.STEPPER_PRU1_stepper_state &lt;&gt; STOP_STEPPER_RUN_STATE;
+
+(* Записываем данные в PRU1 *)
+SteppersConfig_Pru1MemoryWrite(
   STEPPER_PRU1_dir := TRUE,
   STEPPER_PRU1_stepper_accel_ramp := 100,
   STEPPER_PRU1_stepper_decel_ramp := 100,
   STEPPER_PRU1_stepper_max_speed := 30,
   STEPPER_PRU1_stepper_min_speed := 0,
-  STEPPER_PRU1_stepper_quantity := 100,
-  STEPPER_PRU1_stepper_enable :=
-    SteppersConfig_Pru0MemoryTransfer.STEPPER_PRU1_stepper_state &lt;&gt; STOP_STEPPER_RUN_STATE
+  STEPPER_PRU1_stepper_quantity := 100
 );
 </code></pre>
 </div>
@@ -449,7 +461,7 @@ SteppersConfig_Pru1MemoryTransfer(
 
 
                 
-          <p class="page__date"><strong><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Обновлено:</strong> <time datetime="2017-01-09">January 09, 2017 22:30</time></p>
+          <p class="page__date"><strong><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Обновлено:</strong> <time datetime="2017-01-24">January 24, 2017 18:30</time></p>
         
 
       </footer>

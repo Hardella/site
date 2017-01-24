@@ -344,7 +344,7 @@
     <meta itemprop="headline" content="Обмен данными с PRU">
     <meta itemprop="description" content="Механизм передачи данных между PRU и основным циклом Hardella IDE. Hardella это среда для программирования ПЛК на языках группы 61131 (ST и т.п.)">
     
-    <meta itemprop="dateModified" content="December 25, 2016">
+    <meta itemprop="dateModified" content="January 24, 2017">
 
     <div class="page__inner-wrap">
       
@@ -356,13 +356,13 @@
       
 
       <section class="page__content" itemprop="text">
-        <p>Для обмена данными с PRU используется программа <code class="highlighter-rouge">BlinkningLeds_Pru0MemoryTransfer</code>. Её текст генерируется в зависимости от того, какие переменные отмечены на обмен между PRU и основным циклом.</p>
+        <p>Для обмена данными с PRU используется программы <code class="highlighter-rouge">BlinkningLeds_Pru0MemoryRead</code> и <code class="highlighter-rouge">BlinkningLeds_Pru0MemoryWrite</code>. Их текст генерируется в зависимости от того, какие переменные отмечены на обмен между PRU и основным циклом.</p>
 
 <p>Обмен данными занимает ресурсы (регистры, память) PRU, поэтому чтобы увеличить набор синхронизируемых переменных нужно пересобирать (перекомпилировать) PRU программу и после этого переимпортировать результирующий <code class="highlighter-rouge">.exp</code>.</p>
 
 <p>Следует понимать, что:</p>
 <ul>
-  <li>При обмене происходит обновление всех переменных. Нет смысла вызывать обмен несколько раз только для того, чтобы по-очереди передать каждую отдельную переменную.</li>
+  <li>При обмене происходит обновление всех переменных (либо читаются все, либо пишутся все). Нет смысла вызывать обмен несколько раз только для того, чтобы по-очереди передать каждую отдельную переменную.</li>
   <li>Во время обмена данными PRU ядро не выполняет пользовательскую программу и не опрашивает входы. Получаемые значения целостны и согласованы между собой.</li>
   <li>Для отладки PRU в режиме online, можно отмечать некоторые переменные на обмен, и тогда их значения будет видно в CoDeSys online</li>
   <li>Сначала происходит передача данных в PRU, а затем чтение данных из PRU. Между этими двумя операциями PRU может успеть выполнить свой цикл.</li>
@@ -375,6 +375,26 @@
   <li>PRU → основная программа</li>
   <li>PRU0 ↔ PRU1</li>
 </ul>
+
+<h2 id="Общий-подход">Общий подход</h2>
+
+<p>При составлении основной программы <code class="highlighter-rouge">PLC_PRG</code> стоит придерживаться следующего подхода:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>PROGRAM PLC_PRG
+...
+
+(* В начале программы читаем состояние PRU *)
+BlinkningLeds_Pru0MemoryRead()
+
+(* К значениям из PRU можно обращаться через точку *)
+BlinkningLeds_Pru0MemoryWrite.
+
+(* В конце программы записываем новые значения в PRU *)
+BlinkningLeds_Pru0MemoryWrite()
+
+END_PROGRAM
+</code></pre>
+</div>
 
 <h2 id="Передача-данных-в-pru">Передача данных в PRU</h2>
 
@@ -412,9 +432,9 @@ END_PROGRAM
 
 <p><img width="534" alt="Передача данных в PRU настроена" src="https://hardella.com/assets/images/docs/pru/host-pru-exchange-done.png" /></p>
 
-<p>При компиляции этой PRU программы, в результирующей программе <code class="highlighter-rouge">OutControlPruConfig_Pru0MemoryTransfer</code> будет переменная с именем <code class="highlighter-rouge">OUT_CONTROL_active</code> (название складывается из названия блока в котором находится переменная и названия самой переменной).</p>
+<p>При компиляции этой PRU программы, в результирующей программе <code class="highlighter-rouge">OutControlPruConfig_Pru0MemoryWrite</code> будет переменная с именем <code class="highlighter-rouge">OUT_CONTROL_active</code> (название складывается из названия блока в котором находится переменная и названия самой переменной).</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>PROGRAM OutControlPruConfig_Pru0MemoryTransfer
+<div class="highlighter-rouge"><pre class="highlight"><code>PROGRAM OutControlPruConfig_Pru0MemoryWrite
 VAR_INPUT
   OUT_CONTROL_active : BOOL;
 END_VAR
@@ -428,17 +448,17 @@ END_VAR
 
 <p>Таким образом, чтобы передать данные из основного цикла в PRU нужно выполнить такой фрагмент кода:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>OutControlPruConfig_Pru0MemoryTransfer(
+<div class="highlighter-rouge"><pre class="highlight"><code>OutControlPruConfig_Pru0MemoryWrite(
   OUT_CONTROL_active := ...
 );
 </code></pre>
 </div>
 
-<p>Сам обмен происходит в момент вызова <code class="highlighter-rouge">MemoryTransfer</code>.</p>
+<p>Сам обмен происходит в момент вызова <code class="highlighter-rouge">MemoryWrite</code>.</p>
 
 <h2 id="Чтение-данных-из-pru">Чтение данных из PRU</h2>
 
-<p>В целом, чтение ничем не отличается от записи. Точно так же нужно объявить переменную (на этот раз <code class="highlighter-rouge">output</code>, а не <code class="highlighter-rouge">input</code>), и настроить для неё <code class="highlighter-rouge">Exchange with HOST</code>.</p>
+<p>В целом, чтение ничем не отличается от записи, за исключением того, что используется программа <code class="highlighter-rouge">MemoryRead</code> вместо <code class="highlighter-rouge">MemoryWrite</code>. Точно так же нужно объявить переменную (на этот раз <code class="highlighter-rouge">output</code>, а не <code class="highlighter-rouge">input</code>), и настроить для неё <code class="highlighter-rouge">Exchange with HOST</code>.</p>
 
 <p>Например, если в основном цикле нужно значение “быстрого входа”, то это можно реализовать следующим образом:</p>
 
@@ -481,7 +501,7 @@ PROCESS_ENCODER_encoder_zeroDetected : BOOL;
 
 
                 
-          <p class="page__date"><strong><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Updated:</strong> <time datetime="2016-12-25">December 25, 2016 20:49</time></p>
+          <p class="page__date"><strong><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Updated:</strong> <time datetime="2017-01-24">January 24, 2017 18:30</time></p>
         
 
       </footer>
@@ -536,7 +556,7 @@ PROCESS_ENCODER_encoder_zeroDetected : BOOL;
   </ul>
 </div>
 
-<div class="page__footer-copyright">&copy; 2016 Hardella IDE. Powered by <a href="http://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+<div class="page__footer-copyright">&copy; 2017 Hardella IDE. Powered by <a href="http://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
       </footer>
     </div>
 
