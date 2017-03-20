@@ -160,6 +160,57 @@
     
     <h2 class="archive__item-title" itemprop="headline">
       
+        <a href="/en/blog/2017/03/20/hardella-1.7.0-released/" rel="permalink">Hardella 1.7.0 released
+</a>
+      
+    </h2>
+    
+    <div class="page__meta" style="margin-top: 0; margin-bottom: 2em;">
+            
+        <p class="page__date"><strong><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Posted on:</strong> <time datetime="2017-03-20T14:00:00+03:00">March 20, 2017 14:00</time></p>
+        
+
+    </div>
+    
+    
+    
+    <p>Hardella 1.6.2 is avaliable for <a href="/en/download/">download</a>.</p>
+
+<p>Fixed:</p>
+<ul>
+  <li>PRU - host data exchange is now great again (it has been broken since 1.6.2)</li>
+  <li><code class="highlighter-rouge">PDM_DW</code> block was returning inverted values</li>
+</ul>
+
+<p>New features:</p>
+<ul>
+  <li>You can fetch actual PRU cycle duration in the online mode. When the feature is enabled in the PRU configuration, a couple of new output variables is added to <code class="highlighter-rouge">MemoryRead</code>. The variables denote “maximum duration of a PRU program”, and “maximum duration of a PRU cycle”. PRU core collects the statistics as it runs, and it resets the counters on each read from PRU operation.</li>
+  <li>Comments can now be added after semicolons, after <code class="highlighter-rouge">IF</code>, <code class="highlighter-rouge">ELSIF</code>, and so on.</li>
+</ul>
+
+<p>Note:</p>
+<ul>
+  <li>As you open a project that was created in a previous version, “Migration Assistant” would suggest to update the project. This is required to update project to new comment storage format. You just need to click next, next, etc.</li>
+</ul>
+
+    
+    
+    <a href="/en/blog/2017/03/20/hardella-1.7.0-released/#disqus_thread">Leave a Comment</a>
+    
+  </article>
+</div>
+
+
+
+
+
+
+
+<div class="post__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
         <a href="/en/blog/2017/01/24/hardella-1.6.2-released/" rel="permalink">Hardella 1.6.2 released
 </a>
       
