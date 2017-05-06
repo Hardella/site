@@ -160,6 +160,51 @@
     
     <h2 class="archive__item-title" itemprop="headline">
       
+        <a href="https://hardella.com/blog/2017/05/06/hardella-1.7.1-released/" rel="permalink">Выпущена Hardella 1.7.1
+</a>
+      
+    </h2>
+    
+    <div class="page__meta" style="margin-top: 0; margin-bottom: 2em;">
+            
+        <p class="page__date"><strong><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Опубликовано:</strong> <time datetime="2017-05-06T23:00:00+03:00">May 06, 2017 23:00</time></p>
+        
+
+    </div>
+    
+    
+    
+    <p>Hardella 1.7.1 доступна для <a href="/download/">загрузки</a>.</p>
+
+<p>Исправлено:</p>
+<ul>
+  <li>Проект не компилировался, если расположен в пути с пробелами</li>
+  <li>Убраны неиспользуемые переменные из создаваемых PruMemoryTransfer</li>
+  <li>Добавлена ошибка компиляции, если блок FAST_INPUTS используется в программе PRU1 (доступ к входам имеет только PRU0)</li>
+  <li>Переменная PRU_ABZ_ENCODER.initialOffset переименована в positionOfLastZ</li>
+  <li>Добавлена поддерка VAR_IN_OUT (для PRU и CoDeSys). Использовать IN_OUT в PRU нужно осторожно, т.к. write передаёт данные в PRU вообще всегда, а не только по изменению.</li>
+  <li>Теперь программы PRU1 (init, memory read/write) не будут запускаться, если инициализация PRU0 не прошла.</li>
+</ul>
+
+
+    
+    
+    <a href="https://hardella.com/blog/2017/05/06/hardella-1.7.1-released/#disqus_thread">Комментировать</a>
+    
+  </article>
+</div>
+
+
+
+
+
+
+
+<div class="post__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
         <a href="https://hardella.com/blog/2017/03/20/hardella-1.7.0-released/" rel="permalink">Выпущена Hardella 1.7.0
 </a>
       
